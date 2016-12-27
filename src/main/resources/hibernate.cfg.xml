@@ -16,7 +16,7 @@
       org.hibernate.context.internal.ThreadLocalSessionContext
     </property>
     <property name="show_sql">true</property>
-    <property name="hbm2ddl.auto">create</property>
+    <property name="hbm2ddl.auto">create-drop</property>
     <!--Dodawanie klas do zmapowania-->
     <mapping class="com.meow.model.Movie"/>
     <mapping class="com.meow.model.Actor"/>

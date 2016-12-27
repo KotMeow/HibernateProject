@@ -10,7 +10,6 @@ import javax.persistence.Id;
  */
 @Entity
 public class Actor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
