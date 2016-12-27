@@ -24,8 +24,8 @@ public class ActorDAOImpl implements ActorDAO {
 
     @Override
     public List<Actor> getAllActors() {
-        List<Actor> depts = manager.createQuery("Select a From Actor a", Actor.class).getResultList();
-        return depts;
+        List<Actor> actors = manager.createQuery("Select a From Actor a", Actor.class).getResultList();
+        return actors;
     }
 
     @Override

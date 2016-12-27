@@ -23,8 +23,8 @@ public class MovieDAOImpl implements MovieDAO {
 
     @Override
     public List<Movie> getAllMovies() {
-        List<Movie> depts = manager.createQuery("Select a From Movie a", Movie.class).getResultList();
-        return depts;
+        List<Movie> movies = manager.createQuery("Select a From Movie a", Movie.class).getResultList();
+        return movies;
     }
 
     @Override
