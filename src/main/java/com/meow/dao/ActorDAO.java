@@ -12,5 +12,6 @@ public interface ActorDAO {
     public Actor getActorById(Long id);
     public boolean addActor(Actor actor);
     public boolean removeActor(Actor actor);
+    public boolean updateActor(Actor actor);
     public boolean removeAllActor();
 }

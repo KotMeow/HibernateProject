@@ -58,6 +58,17 @@ public class ActorDAOImpl implements ActorDAO {
     }
 
     @Override
+    public boolean updateActor(Actor actor) {
+        try{
+            manager.merge(actor);
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public boolean removeAllActor() {
 
         try{

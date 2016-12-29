@@ -70,6 +70,17 @@ public class MovieDAOImpl implements MovieDAO {
     }
 
     @Override
+    public boolean updateMovie(Movie movie) {
+        try{
+            manager.merge(movie);
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public List<Actor> getMovieActors(Movie movie) {
         return movie.getActors();
     }

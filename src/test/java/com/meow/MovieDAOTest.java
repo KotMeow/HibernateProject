@@ -5,6 +5,7 @@ import com.meow.dao.MovieDAO;
 import com.meow.model.Actor;
 import com.meow.model.Movie;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,17 @@ import java.util.List;
 public class MovieDAOTest {
 
     @Autowired
-    MovieDAO movieDAO;
+    private MovieDAO movieDAO;
     @Autowired
-    ActorDAO actorDAO;
+    private ActorDAO actorDAO;
 
+    private int moviesSize;
+    private int actorsSize;
+    @Before
+    public void size() {
+        moviesSize = movieDAO.getAllMovies().size();
+        actorsSize = actorDAO.getAllActors().size();
+    }
     @Test
     @Transactional
     @Rollback
@@ -35,8 +43,7 @@ public class MovieDAOTest {
         movie.setTitle("Batman");
         movie.setGenre("Fantasy");
         movieDAO.addMovie(movie);
-        List<Movie> movies = movieDAO.getAllMovies();
-        Assert.assertEquals(movie.getTitle(), movies.get(0).getTitle());
+        Assert.assertEquals(movie.getTitle(), movieDAO.getMovieById(movie.getId()).getTitle());
     }
 
     @Test
@@ -47,14 +54,14 @@ public class MovieDAOTest {
         actor.setRole("Batman");
         actor.setName("Kamil Kot");
         actorDAO.addActor(actor);
-        List<Actor> actors = actorDAO.getAllActors();
-        Assert.assertEquals(actor.getName(), actors.get(0).getName());
+        Assert.assertEquals(actor.getName(), actorDAO.getActorById(actor.getId()).getName());
     }
 
     @Test
     @Transactional
     @Rollback
     public void testDeleteMovie() {
+
         Movie movie1 = new Movie();
         movie1.setTitle("Batman");
         movie1.setGenre("Fantasy");
@@ -63,11 +70,10 @@ public class MovieDAOTest {
         movie2.setGenre("Drama");
         movieDAO.addMovie(movie1);
         movieDAO.addMovie(movie2);
-        Assert.assertEquals(movieDAO.getAllMovies().size(), 2);
+        Assert.assertEquals(movieDAO.getAllMovies().size(), moviesSize+2);
         movieDAO.removeMovie(movie2);
-        Assert.assertEquals(movieDAO.getAllMovies().size(), 1);
-        Assert.assertNull(movieDAO.getMovieById((long) 2));
-        Assert.assertEquals(movieDAO.getAllMovies().size(), 1);
+        Assert.assertEquals(movieDAO.getAllMovies().size(), moviesSize+1);
+        Assert.assertNull(movieDAO.getMovieById(movie2.getId()));
     }
 
     @Test
@@ -82,10 +88,51 @@ public class MovieDAOTest {
         actor2.setRole("Batman");
         actorDAO.addActor(actor1);
         actorDAO.addActor(actor2);
-        Assert.assertEquals(actorDAO.getAllActors().size(), 2);
+        Assert.assertEquals(actorDAO.getAllActors().size(), actorsSize+2);
         actorDAO.removeActor(actor2);
-        Assert.assertEquals(actorDAO.getAllActors().size(), 1);
-        Assert.assertNull(actorDAO.getActorById((long) 2));
-        Assert.assertEquals(actorDAO.getAllActors().size(), 1);
+        Assert.assertEquals(actorDAO.getAllActors().size(), actorsSize+1);
+        Assert.assertNull(actorDAO.getActorById(actor2.getId()));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testUpdateMovie() {
+        Movie movie1 = new Movie();
+        movie1.setTitle("Batman");
+        movie1.setGenre("Fantasy");
+        Movie movie2 = new Movie();
+        movie2.setTitle("Inception");
+        movie2.setGenre("Drama");
+        movieDAO.addMovie(movie1);
+        movieDAO.addMovie(movie2);
+        Assert.assertEquals(movieDAO.getAllMovies().size(), moviesSize+2);
+        Assert.assertEquals("Inception", movieDAO.getMovieById(movie2.getId()).getTitle());
+        Movie movieUpdate = movieDAO.getMovieById(movie2.getId());
+        movieUpdate.setTitle("Conjuring");
+        movieDAO.updateMovie(movieUpdate);
+        Assert.assertEquals("Conjuring", movieDAO.getMovieById(movie2.getId()).getTitle());
+        Assert.assertEquals("Batman", movieDAO.getMovieById(movie1.getId()).getTitle());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testUpdateActor() {
+        Actor actor1 = new Actor();
+        Actor actor2 = new Actor();
+        actor1.setName("Kamil Kot");
+        actor1.setRole("James Bond");
+        actor2.setName("Leonardo");
+        actor2.setRole("Batman");
+        actorDAO.addActor(actor1);
+        actorDAO.addActor(actor2);
+        Assert.assertEquals(actorDAO.getAllActors().size(), actorsSize+2);
+        Assert.assertEquals("Leonardo", actorDAO.getActorById(actor2.getId()).getName());
+        Actor actorUpdate = actorDAO.getActorById(actor2.getId());
+        actorUpdate.setName("Tom");
+        actorDAO.updateActor(actorUpdate);
+        Assert.assertEquals("Tom", actorDAO.getActorById(actor2.getId()).getName());
+        Assert.assertEquals("Kamil Kot", actorDAO.getActorById(actor1.getId()).getName());
     }
 }
