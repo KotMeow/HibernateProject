@@ -9,6 +9,7 @@ import com.meow.model.Movie;
 import org.hibernate.Session;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Hello world!
@@ -16,7 +17,9 @@ import java.util.ArrayList;
 public class App {
 
     public static void main(String[] args) {
-//        MovieDAO movieDAO = new MovieDAOImpl();
+        MovieDAO movieDAO = new MovieDAOImpl();
+        List list = movieDAO.getMoviesByName("Batman");
+        System.out.println(list.size());
 //        ActorDAO actorDAO = new ActorDAOImpl();
 //        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 //        session.beginTransaction();

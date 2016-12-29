@@ -12,5 +12,6 @@ public interface MovieDAO
     public boolean removeMovie(Movie movie);
     public boolean removeAllMovies();
     public boolean updateMovie(Movie movie);
+    public List<Movie> getMoviesByName(String name);
     public List<Actor> getMovieActors(Movie movie);
 }

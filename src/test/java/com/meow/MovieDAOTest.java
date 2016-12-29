@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -134,5 +135,39 @@ public class MovieDAOTest {
         actorDAO.updateActor(actorUpdate);
         Assert.assertEquals("Tom", actorDAO.getActorById(actor2.getId()).getName());
         Assert.assertEquals("Kamil Kot", actorDAO.getActorById(actor1.getId()).getName());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void searchTest() {
+        int i = movieDAO.getMoviesByName("Batman").size();
+        Movie movie = new Movie();
+        movie.setTitle("Batman");
+        movieDAO.addMovie(movie);
+        Assert.assertEquals(movieDAO.getMoviesByName("Batman").size(), i+1);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void actorsFromMovieTest(){
+        Actor actor1 = new Actor();
+        Actor actor2 = new Actor();
+        Movie movie1 = new Movie();
+        List actors = new ArrayList();
+        movie1.setTitle("Batman");
+        movie1.setGenre("Fantasy");
+        movieDAO.addMovie(movie1);
+        Assert.assertEquals(movieDAO.getMovieActors(movie1).size(), 0);
+        actor1.setName("Kamil Kot");
+        actor1.setRole("James Bond");
+        actor2.setName("Leonardo");
+        actor2.setRole("Batman");
+        actorDAO.addActor(actor1);
+        actorDAO.addActor(actor2);
+        movie1.getActors().add(actor1);
+        movie1.getActors().add(actor2);
+        Assert.assertEquals(movieDAO.getMovieActors(movie1).size(), 2);
     }
 }

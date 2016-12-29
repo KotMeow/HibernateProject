@@ -2,6 +2,7 @@ package com.meow.dao;
 
 import com.meow.model.Actor;
 import com.meow.model.Movie;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -78,6 +82,12 @@ public class MovieDAOImpl implements MovieDAO {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Movie> getMoviesByName(String name) {
+        List<Movie> movies = manager.createQuery("Select a From Movie a where a.title like :custName", Movie.class).setParameter("custName", name).getResultList();
+        return movies;
     }
 
     @Override
